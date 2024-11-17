@@ -41,23 +41,44 @@ document.querySelectorAll('.event-card').forEach(card => {
     });
 });
 
-// Language toggle functionality
-const toggleLanguageButton = document.getElementById('toggleLanguage');
+const eventContainer = document.querySelector('.event-container');
+const scrollLeftEventsButton = document.getElementById('scrollLeftEvents');
+const scrollRightEventsButton = document.getElementById('scrollRightEvents');
+let isMouseOverEvents = false;
+let isButtonClickedEvents = false;
 
-toggleLanguageButton.addEventListener('click', () => {
-    const currentLang = document.documentElement.lang || 'en';
-    document.documentElement.lang = currentLang === 'en' ? 'ar' : 'en';
-
-    // Update text dynamically for demonstration
-    const allText = document.querySelectorAll('h1, h2, p, button, nav a');
-    allText.forEach(el => {
-        if (document.documentElement.lang === 'ar') {
-            el.textContent = el.textContent.replace('English', 'العربية').replace('About Us', 'من نحن').replace('Our Vision', 'رؤيتنا').replace('Members', 'الأعضاء');
-        } else {
-            el.textContent = el.textContent.replace('العربية', 'English').replace('من نحن', 'About Us').replace('رؤيتنا', 'Our Vision').replace('الأعضاء', 'Members');
-        }
-    });
+// Scroll left and right buttons for recent events
+scrollLeftEventsButton.addEventListener('click', () => {
+    isButtonClickedEvents = true;
+    eventContainer.scrollBy({ left: -200, behavior: 'smooth' });
+    setTimeout(() => (isButtonClickedEvents = false), 500); // Resume auto-scroll after 500ms
 });
+
+scrollRightEventsButton.addEventListener('click', () => {
+    isButtonClickedEvents = true;
+    eventContainer.scrollBy({ left: 200, behavior: 'smooth' });
+    setTimeout(() => (isButtonClickedEvents = false), 500); // Resume auto-scroll after 500ms
+});
+
+// Automatic scrolling for recent events
+function autoScrollEvents() {
+    if (!isMouseOverEvents && !isButtonClickedEvents) {
+        eventContainer.scrollBy({ left: 1, behavior: 'smooth' });
+    }
+}
+
+// Pause auto-scroll on mouse over for recent events
+eventContainer.addEventListener('mouseenter', () => {
+    isMouseOverEvents = true;
+});
+
+eventContainer.addEventListener('mouseleave', () => {
+    isMouseOverEvents = false;
+});
+
+// Call autoScrollEvents function every 20ms
+setInterval(autoScrollEvents, 20);
+
 
 
 
